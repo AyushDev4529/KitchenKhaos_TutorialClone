@@ -58,7 +58,7 @@
 - Add `animator` component to the player visual.
 - Create a animation Controller and name it,
 - Open Animation window using Ctrl + 6.
-- Record the animation using record button ![[Animation Recording Button.png]]
+- Record the animation using record button ![[Animation Recording Button.png]](Images/Animation-Recording-Button.png)
 - Record basic animations for Idle and Walk,
 - in Animator window make transition from Idle to Walking with a parameter of bool type named `IsWalking` and make condition in transition for is waking set to true for walking animation. ![[Transition for Animation.png]]
 > We will learn animation later in Great details for now understanding the basics that this function exists in unity.
