@@ -2,87 +2,58 @@ using UnityEngine;
 
 public class Player : MonoBehaviour
 {
+    //TODO : to be moved to separate player Interaction Script with IInteractable interface
+
     [SerializeField] float moveSpeed = 5f;
     [SerializeField] float rotationSpeed = 5f;
     [SerializeField] GameInput gameInput;
-    Vector3 movementDirection;
-    Vector3 movementDeltaVector;
-    float moveDistance;
+    [SerializeField] CharacterController characterController;
+
+    Vector3 movementVector;
     bool isWalking = false;
-    
-    float bias = 0.1f; // Small bias to prevent floating point precision issues
+    float verticalVelocity;
 
     private void Update()
     {
         HandleMovement();
     }
 
-    //TODO : to be moved to separate player Interaction Script with IInteractable interface
-    //Handle Interaction Logic
-    private void HandleInteractions()
-    {
-
-    }
-
-
-    // NOTE: Manual collision resolution experiment. We will change this
-    //TODO : to be moved to separate player Movement Script
-    //Goal: Understand collision prediction, not implement a full controller.
     // Handle Movement Logic 
     private void HandleMovement()
     {
-        moveDistance = Time.deltaTime * moveSpeed;
-        var playerPos = transform.position;
-        movementDirection = MovementDirection();
-        bool canMove = CanMove();
+        float moveDistance = Time.deltaTime * moveSpeed;
+        Vector3 playerPos = transform.position;
+        Vector3 movementDirection = MovementDirection();
 
-        if (!canMove)
-        {
+        // Calculate final movement vector including gravity
+        movementVector = movementDirection * moveDistance + new Vector3(0, HandleGravity() * Time.deltaTime, 0);
 
-            // Try moving only along the X axis
-            movementDirection = MovementDirectionX();
-            if (canMove)
-            {
-                PlayerMovement();
-            }
-            else
-            {
-                // Try moving only along the Z axis
-                movementDirection = MovementDirectionZ();
-                if (canMove)
-                {
-                    PlayerMovement();
-                }
-            }
+        PlayerMovement();
 
+        // Check if the player is walking
+        Vector3 horizontalVelocity = new Vector3(characterController.velocity.x, 0, characterController.velocity.z);
+        float horizontalVelocityMagnitude = horizontalVelocity.magnitude;
 
-        }
+        // Small threshold to avoid floating point precision issues
+        float smallThreshold = 0.01f;
+        isWalking = horizontalVelocityMagnitude > smallThreshold;
 
-        if (CanMove())
-        {
-            PlayerMovement();
-        }
-
-        movementDeltaVector = transform.position - playerPos;
-        isWalking = movementDeltaVector.magnitude > bias;
-
-        if (movementDeltaVector.magnitude > 0)
-        {
+        if (horizontalVelocityMagnitude > smallThreshold)
             PlayerRotation();
-        }
     }
 
     // Move the player based on input and return the new position
     private Vector3 PlayerMovement()
     {
-        transform.position += movementDirection * moveDistance;
+        characterController.Move(movementVector);// Apply horizontal movement
         return transform.position;
     }
 
     // Rotate the player to face the movement direction
     private void PlayerRotation()
     {
-        transform.forward = Vector3.Slerp(transform.forward, -movementDeltaVector.normalized, Time.deltaTime * rotationSpeed);
+        Vector3 rotationDeltaVector = new Vector3(characterController.velocity.x, 0, characterController.velocity.z);
+        transform.forward = Vector3.Slerp(transform.forward, -rotationDeltaVector.normalized, Time.deltaTime * rotationSpeed);
     }
 
     // Get the movement direction based on input
@@ -94,33 +65,19 @@ public class Player : MonoBehaviour
         return movementDirection;
     }
 
-    // Get the movement direction along the X axis based on input
-    private Vector3 MovementDirectionX()
-    {  
-        Vector3 movementDirectionX = new Vector3(MovementDirection().x, 0, 0);
-        return movementDirectionX;
+    private float HandleGravity()
+    {
+        //Industry practice usually sets it to a small negative value instead of zero.
+        if (characterController.isGrounded)
+            verticalVelocity = 0;
+        else
+            verticalVelocity += Physics.gravity.y * Time.deltaTime;
+        return verticalVelocity;
     }
-
-    // Get the movement direction along the Z axis based on input
-    private Vector3 MovementDirectionZ()
-    {    
-        Vector3 movementDirectionZ = new Vector3(0, 0, MovementDirection().z);
-        return movementDirectionZ;
-    }
-
-
 
     // Check if the player is currently walking
     public bool IsWalking()
     {
         return isWalking;
-    }
-
-    private bool CanMove()
-    {
-        float playerRadius = 0.7f;
-        float playerHight = 2f;
-        bool canMove = !Physics.CapsuleCast(transform.position, transform.position + Vector3.up * playerHight, playerRadius, movementDirection, moveDistance);
-        return canMove;
     }
 }
