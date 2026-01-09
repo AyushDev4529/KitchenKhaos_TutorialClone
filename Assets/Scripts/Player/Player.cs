@@ -1,4 +1,5 @@
 using UnityEngine;
+using static UnityEngine.UI.Image;
 
 public class Player : MonoBehaviour
 {
@@ -12,15 +13,28 @@ public class Player : MonoBehaviour
     [SerializeField] CharacterController characterController;
     [SerializeField] LayerMask interactableLayerMask;
 
+
     Vector3 movementVector;
     bool isWalking = false;
     float verticalVelocity;
     Vector3 lastInteractDirection;
 
+    private void Start()
+    {
+        gameInput.OnInteractionAction += GameInput_OnInteractionAction;
+    }
+
+    private void OnDestroy()
+    {
+        gameInput.OnInteractionAction -= GameInput_OnInteractionAction;
+    }
+
+
     private void Update()
     {
+       
         HandleMovement();
-        HandleInteraction();
+        
     }
 
     // Handle Movement Logic 
@@ -90,16 +104,16 @@ public class Player : MonoBehaviour
     //Handle Interaction Logic
     private void HandleInteraction()
     {
+
+        float chestHeight = characterController.height * 0.5f;
+        float capsuleRadius = characterController.radius;
+        Vector3 raycastOrigin = transform.position + Vector3.up * chestHeight + transform.forward * capsuleRadius;
+        // Using -transform.forward because PlayerVisual faces opposite direction
+        Vector3 raycstDirection = -transform.forward;
         float raycastDistance = 2f;
-        Vector3 interactionDirection = MovementDirection();
-
-
-        if (interactionDirection != Vector3.zero)
-            lastInteractDirection = interactionDirection;
-
 
         // Perform raycast to detect interactable objects in front of the player
-        if (Physics.Raycast(transform.position, lastInteractDirection, out RaycastHit hitInfo, raycastDistance, interactableLayerMask))
+        if (Physics.Raycast(raycastOrigin, raycstDirection, out RaycastHit hitInfo, raycastDistance, interactableLayerMask))
         {
             Debug.Log("Hit: " + hitInfo.collider.name);
             if (hitInfo.transform.TryGetComponent(out ClearCounter clearCounter)) 
@@ -110,6 +124,11 @@ public class Player : MonoBehaviour
             Debug.Log("No interactable object in front of the player.");
         }
 
+    }
+
+    private void GameInput_OnInteractionAction(object sender, System.EventArgs e)
+    {
+        HandleInteraction();
     }
 
 }
