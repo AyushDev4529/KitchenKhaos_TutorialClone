@@ -2,7 +2,7 @@ using UnityEngine;
 
 public class PlayerAnimator : MonoBehaviour
 {
-    [SerializeField] Player player; // Reference to the Player script
+    [SerializeField] PlayerMovement playerMovement;
     Animator animator;
     bool isWalking = false;
     const string IS_WALKING = "IsWalking";
@@ -14,7 +14,7 @@ public class PlayerAnimator : MonoBehaviour
 
     private void Update()
     {
-        isWalking = player.IsWalking(); // Check if the player is walking using the Player script
+        isWalking = playerMovement.IsWalking(); // Check if the player is walking using the Player script
         animator.SetBool(IS_WALKING, isWalking); // Update the Animator parameter based on the player's movement state
     }
 

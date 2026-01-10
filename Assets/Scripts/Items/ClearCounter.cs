@@ -1,9 +1,9 @@
 using UnityEngine;
 
-public class ClearCounter : MonoBehaviour
+public class ClearCounter : MonoBehaviour, IInteractable
 {
-    public void Interact()
+    public void Interact(GameObject interactor)
     {
-        Debug.Log("Interacted with ClearCounter");
+        Debug.Log("Interacted with ClearCounter by " + interactor.name);
     }
 }
