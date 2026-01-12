@@ -62,18 +62,15 @@ public class Player : MonoBehaviour
         {
             Debug.Log("Hit: " + hitInfo.collider.name);
             if (hitInfo.transform.TryGetComponent(out IInteractable interactable))
-            {
-            
+            {         
                 if (hitInfo.transform.TryGetComponent(out ClearCounter clearCounter))
                 {
-                    SetSelectedCounter(clearCounter);
-                    
+                    SetSelectedCounter(clearCounter); 
                 }
                 else
                 {
                     SetSelectedCounter(null);
                 }
-
             }
         }
         else
