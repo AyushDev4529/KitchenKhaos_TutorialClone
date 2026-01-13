@@ -1,10 +1,19 @@
-# KitchenKhaos_TutorialClone
-My first Unity game based on Code Monkey's Kitchen Chaos tutorial 
-# 🍳 KitchenKhaos – Unity Cooking Game (Tutorial Clone)
+# KitchenChaos Unity Study
+
+This repository documents my step-by-step learning journey
+building a Kitchen Chaos–style game in Unity using C#.
+
+## Learning Notes
+
+📁 Learning notes are maintained inside the Unity project:  
+[`Assets/DOCS/`](./Assets/DOCS) — lesson-by-lesson markdown notes with diagrams and refactors.
+
+
+These notes explain design decisions, refactors, and architecture trade-offs.
 
 **Built by AyushDev4529 | Jan–Mar 2026**
 
-KitchenKhaos is a fast-paced 2D cooking game inspired by Code Monkey’s Unity tutorial series. This project was developed as part of my 2026–2027 game dev roadmap to master gameplay systems, UI architecture, and performance optimization.
+KitchenKhaos is a fast-paced 3D cooking game inspired by Code Monkey’s Unity tutorial series. This project was developed as part of my 2026–2027 game dev roadmap to master gameplay systems, UI architecture, and performance optimization.
 
 ---
 
@@ -17,29 +26,36 @@ KitchenKhaos is a fast-paced 2D cooking game inspired by Code Monkey’s Unity t
 
 ---
 
-## 🧠 Systems Implemented
+## 🧠 Systems Implemented (Current)
 
-| System               | Description                                                                 |
-|----------------------|-----------------------------------------------------------------------------|
-| Player Movement      | WASD controls with smooth camera follow                                     |
-| UI & HUD             | Score display, health bar, menu navigation                                  |
-| Event System         | Decoupled architecture using C# events and delegates                        |
-| ScriptableObjects    | Modular data for player stats and recipes                                   |
-| Animator Controller  | 2D sprite animations with blend trees                                       |
-| Counter Interactions | Cutting, cooking, plating, and delivery mechanics                           |
-| Customer AI          | Order spawning, waiting logic, and difficulty scaling                       |
-| Game Progression     | Countdown timer, wave system, and game over state                           |
-| Polish & Feedback    | Particle effects, screen shake, and sound design                            |
+| System               | Description                                              |
+|----------------------|----------------------------------------------------------|
+| Player Movement      | CharacterController-based movement with input system     |
+| Camera               | Cinemachine follow camera                                |
+| Interaction System   | Raycast-based interaction with counters                  |
+| Kitchen Objects      | ScriptableObject-driven spawning and ownership model      |
+| ClearCounter         | Counter interaction with safe object instantiation        |
+
+---
+
+## 🚧 Systems Planned / In Progress
+
+- UI & HUD (score, timers, menus)
+- Customer AI and order system
+- Cooking, cutting, and plating workflows
+- Game progression and difficulty scaling
+- Visual and audio polish
 
 ---
 
 ## 🛠️ Tech Stack
 
-- **Engine:** Unity 2022.3 LTS
+- **Engine:** Unity 6000.3.1f1 LTS
 - **Language:** C# (modular, event-driven)
 - **IDE:** Visual Studio Code
 - **Version Control:** Git + GitHub Desktop
-- **Platform:** WebGL (itch.io release)
 
-> To be uploaded after completing tutorial.
+- **Platform:** PC (WebGL / itch.io planned)
+
 ---
+
