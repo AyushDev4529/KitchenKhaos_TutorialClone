@@ -4,7 +4,7 @@ using UnityEngine;
 [CreateAssetMenu(fileName = "KitchenObject", menuName = "ScriptableObjects/KitchenObjectSO", order = 1)]
 public class KitchenObjectSO : ScriptableObject
 {
-    public Transform prefab;
+    public GameObject prefab;
     public Sprite objectSprite;
     public string objectName;
 

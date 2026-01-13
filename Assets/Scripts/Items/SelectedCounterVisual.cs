@@ -19,7 +19,6 @@ public class SelectedCounterVisual : MonoBehaviour
             Hide();
 
     }
-
     private void OnDestroy()
     {
         Player.Instance.OnSelectedCounterChangedWithArgs -= Player_OnSelectedCounterChangedWithArgs;
