@@ -16,11 +16,11 @@ public class Player : MonoBehaviour, IKitchenObjectParent
     // Singleton instance
     public static Player Instance { get; private set; }
 
-    private ClearCounter selectedCounter;
+    private BaseCounter baseCounter;
     public event EventHandler<SelectedCounterChangedEventArgs> OnSelectedCounterChangedWithArgs;
     public class SelectedCounterChangedEventArgs : EventArgs
     {
-        public ClearCounter selectedCounter;
+        public BaseCounter selectedCounter;
     }
 
     private void Awake()
@@ -64,9 +64,9 @@ public class Player : MonoBehaviour, IKitchenObjectParent
         {
             if (hitInfo.transform.TryGetComponent(out IInteractable interactable))
             {         
-                if (hitInfo.transform.TryGetComponent(out ClearCounter clearCounter))
+                if (hitInfo.transform.TryGetComponent(out BaseCounter baseCounter))
                 {
-                    SetSelectedCounter(clearCounter); 
+                    SetSelectedCounter(baseCounter); 
                 }
                 else
                 {
@@ -85,19 +85,19 @@ public class Player : MonoBehaviour, IKitchenObjectParent
     private void GameInput_OnInteractionAction(object sender, System.EventArgs e)
     {
 
-        if (selectedCounter != null)
-            selectedCounter.Interact(gameObject);
+        if (baseCounter != null)
+            baseCounter.Interact(gameObject);
 
 
     }
 
     // Set the currently selected counter and invoke the event
-    private void SetSelectedCounter(ClearCounter selectedCounter)
+    private void SetSelectedCounter(BaseCounter selectedCounter)
     {
         // Only invoke event if selected counter has changed
-        if (this.selectedCounter != selectedCounter)
+        if (this.baseCounter != selectedCounter)
         {
-            this.selectedCounter = selectedCounter;
+            this.baseCounter = selectedCounter;
             OnSelectedCounterChangedWithArgs?.Invoke(this, new SelectedCounterChangedEventArgs { selectedCounter = selectedCounter }); 
         }
 
