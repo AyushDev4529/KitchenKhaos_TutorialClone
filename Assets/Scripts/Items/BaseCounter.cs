@@ -10,6 +10,13 @@ public class BaseCounter : MonoBehaviour, IInteractable , IKitchenObjectParent
         Debug.LogError("BaseCounter Interacted!!");
     }
 
+    //if the interactor has a Player component, return true and assign the Player to the out parameter
+    protected Player TryGetPlayer(GameObject interactor)
+    {
+       Player player = interactor.GetComponent<Player>();
+       return player;
+    }
+
     public GameObject GetKitchenObjectAttachPoint()
     {
         return counterTop;

@@ -1,15 +1,14 @@
 using System;
 using UnityEngine;
-using static UnityEngine.UI.Image;
 
 public class Player : MonoBehaviour, IKitchenObjectParent
 {
     //TODO : to be moved to separate player Interaction Script with IInteractable interface
     //TODO : generalize so selectedVisual can be any type of interactable object
 
-    [SerializeField] GameInput gameInput;
-    [SerializeField] CharacterController characterController;
-    [SerializeField] LayerMask interactableLayerMask;
+    [SerializeField] private GameInput gameInput;
+    [SerializeField] private CharacterController characterController;
+    [SerializeField] private LayerMask interactableLayerMask;
     [SerializeField] private GameObject kitchenObjectHoldPoint;
     private KitchenObject kitchenObject;
 
@@ -55,24 +54,15 @@ public class Player : MonoBehaviour, IKitchenObjectParent
         float chestHeight = characterController.height * 0.5f;
         float capsuleRadius = characterController.radius;
         Vector3 raycastOrigin = transform.position + Vector3.up * chestHeight + transform.forward * capsuleRadius;
-        // Using -transform.forward because PlayerVisual faces opposite direction
+        // Using -transform.forward because PlayerVisual faces the opposite direction
         Vector3 raycastDirection = -transform.forward;
         float raycastDistance = 2f;
 
         // Perform raycast to detect interactable objects in front of the player
         if (Physics.Raycast(raycastOrigin, raycastDirection, out RaycastHit hitInfo, raycastDistance, interactableLayerMask))
         {
-            if (hitInfo.transform.TryGetComponent(out IInteractable interactable))
-            {         
-                if (hitInfo.transform.TryGetComponent(out BaseCounter baseCounter))
-                {
-                    SetSelectedCounter(baseCounter); 
-                }
-                else
-                {
-                    SetSelectedCounter(null);
-                }
-            }
+            if (!hitInfo.transform.TryGetComponent(out IInteractable interactable)) return;
+            SetSelectedCounter(hitInfo.transform.TryGetComponent(out BaseCounter baseCounter) ? baseCounter : null);
         }
         else
         {
@@ -82,13 +72,10 @@ public class Player : MonoBehaviour, IKitchenObjectParent
     }
 
     // Event handler for interaction action
-    private void GameInput_OnInteractionAction(object sender, System.EventArgs e)
+    private void GameInput_OnInteractionAction(object sender, EventArgs e)
     {
-
         if (baseCounter != null)
             baseCounter.Interact(gameObject);
-
-
     }
 
     // Set the currently selected counter and invoke the event

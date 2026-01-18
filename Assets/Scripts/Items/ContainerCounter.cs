@@ -1,24 +1,22 @@
 using System;
 using UnityEngine;
 
-public class ContainerCounter : BaseCounter, IInteractable
+public class ContainerCounter : BaseCounter
 {
-
-    
     [SerializeField] private KitchenObjectSO kitchenObjectSO;
-    
-
     public event EventHandler OnPlayerGrabbedObject;
 
     public override void Interact(GameObject interactor)
     {
-        // Try to get the Player component from the interactor GameObject
-        Player player = interactor.GetComponent<Player>();
+        Player player = TryGetPlayer(interactor);
+
         if (player != null)
         {
-            OnPlayerGrabbedObject?.Invoke(this, EventArgs.Empty);
-
-            SpawnKitchenObject(player);
+            if (!player.HasKitchenObject())
+            {
+                OnPlayerGrabbedObject?.Invoke(this, EventArgs.Empty);
+                SpawnKitchenObject(player);
+            }
         }
         else
         {
@@ -32,9 +30,9 @@ public class ContainerCounter : BaseCounter, IInteractable
         if (!HasKitchenObject())
         {
             GameObject kitchenObjectInstance = Instantiate(kitchenObjectSO.prefab);
-            // Set the local position to zero to align it with the counter top
+            // Set the local position to zero to align it with the counter-top
             kitchenObjectInstance.GetComponent<KitchenObject>().SetKitchenObjectParent(player);
 
         }
-    }   
+    }
 }
